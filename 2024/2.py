@@ -36,7 +36,6 @@ def mandatory():
 		count = 0
 		for line in infile.readlines():
 			L = list(map(int, line.split()))
-			A, D = sorted(L), sorted(L, reverse=True)
 			if test(L):
 				count += 1
 		print(count)
