@@ -6,7 +6,7 @@
 #    By: andorako <andorako@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/03 08:44:43 by andorako          #+#    #+#              #
-#    Updated: 2024/12/03 10:20:35 by andorako         ###   ########.fr        #
+#    Updated: 2024/12/03 10:24:42 by andorako         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,11 +46,10 @@ def bonus():
 		while i < len(L):
 			while i < len(L) and L[i][1] == 1:
 				i += 1
-			res += mul_matches(line[j : L[i][0]])
+			res += mul_matches(line[L[j][0] : L[i][0]])
 			while i < len(L) and L[i][1] == 2:
 				i += 1
-			if i < len(L):
-				j = L[i][0]
+			j = i
 		print(res)
 
 bonus()
