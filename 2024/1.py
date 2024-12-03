@@ -14,7 +14,6 @@ import sys
 from collections import Counter
 
 input_file = "input.txt"
-output_file = "output.txt"
 
 def mandatory():
 	with open(input_file, "r") as infile:

@@ -14,7 +14,6 @@ import sys
 from collections import Counter
 
 input_file = "input.txt"
-output_file = "output.txt"
 
 def in_range(delta):
 	return (delta >= 1 and delta <= 3)
