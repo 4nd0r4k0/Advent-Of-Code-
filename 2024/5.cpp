@@ -27,27 +27,6 @@ vector<string> m_split(const string& s, const string delim)
 	return (splitted);
 }
 
-void bfs(unordered_map<int, vector<int>>& graph, int u,
-	unordered_set<int>& seen)
-{
-	queue<int> que;
-	que.push(u);
-	seen.insert(u);
-	while (!que.empty())
-	{
-		int node = que.front();
-		que.pop();
-		for (int v : graph[node])
-		{
-			if (seen.find(v) == seen.end())
-			{
-				seen.insert(v);
-				que.push(v);
-			}
-		}
-	}
-}
-
 void mandatory(void)
 {
 	string line;
