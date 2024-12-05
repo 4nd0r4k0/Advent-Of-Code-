@@ -45,10 +45,9 @@ void mandatory(void)
 		{
 			vector<string> sp = m_split(line, ",");
 			vector<int> vertex;
-			int check = 1;
 			for (string& s : sp)
 				vertex.push_back(stoi(s));
-			int N = sp.size();
+			int check = 1, N = sp.size();
 			for (int i = N - 1; check && i >= 0; i--)
 			{
 				auto& S = graph[vertex[i]];
@@ -81,21 +80,15 @@ void bonus(void)
 		{
 			vector<string> sp = m_split(line, ",");
 			vector<int> vertex;
-			bool check = true;
 			for (string& s : sp)
 				vertex.push_back(stoi(s));
-			int N = sp.size();
+			int check = 1, N = sp.size();
 			for (int i = N - 1; check && i >= 0; i--)
 			{
 				auto& S = graph[vertex[i]];
-				for (int j = i - 1; j >= 0; j--)
-				{
+				for (int j = i - 1; check && j >= 0; j--)
 					if (S.find(vertex[j]) != S.end())
-					{
-						check = false;
-						break ;
-					}
-				}
+						check &= 0;
 			}
 			if (!check)
 			{
@@ -104,16 +97,15 @@ void bonus(void)
 					check = 0;
 					while (!check)
 					{
+						check = 1;
 						auto& S = graph[vertex[i]];
-						for (int j = i - 1; j >= 0; j--)
+						for (int j = i - 1; check && j >= 0; j--)
 						{
 							if (S.find(vertex[j]) != S.end())
 							{
 								swap(vertex[i], vertex[j]);
 								check &= 0;
-								break ;
 							}
-							check |= 1;
 						}
 					}
 				}
