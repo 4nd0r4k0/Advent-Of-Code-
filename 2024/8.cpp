@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   8.cpp                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: andorako <andorako@student.42antananari    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/08 10:32:31 by andorako          #+#    #+#             */
+/*   Updated: 2024/12/08 11:11:59 by andorako         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -18,37 +30,81 @@ void mandatory(vector<string>& M)
 		{
 			for (int j = i + 1; j < A; j++)
 			{
-				if (vec[i].first == vec[j].first)
+				pair<int, int> p = vec[i], t = vec[j];
+				if (p.second > t.second)
+					swap(p, t);
+				int ai = 2 * p.first - t.first;
+				int bi = 2 * t.first - p.first;
+				int aj = 2 * p.second - t.second;
+				int bj = 2 * t.second - p.second;
+				if (ai >= 0 && ai < m && aj >= 0 && aj < n)
+					M[ai][aj] = '#';
+				if (bi >= 0 && bi < m && bj >= 0 && bj < n)
+					M[bi][bj] = '#';
+			}
+		}
+	}
+	for (string& v : M)
+	{
+		cout << v << "\n";
+	}
+	int ans = 0;
+	for (string& v : M)
+		for (char c : v)
+			if (c == '#')
+				ans++;
+	cout << ans << endl;
+}
+
+void bonus(vector<string>&M)
+{
+	map<char, vector<pair<int, int>>> antennas;
+	int m = M.size(), n = M[0].size();
+	for (int i = 0; i < m; i++)
+		for (int j = 0; j < n; j++)
+			if (M[i][j] != '.')
+				antennas[M[i][j]].push_back({i, j});
+	for (auto p : antennas)
+	{
+		vector<pair<int, int>>& vec = p.second;
+		int A = vec.size();
+		for (int i = 0; i < A; i++)
+		{
+			for (int j = i + 1; j < A; j++)
+			{
+				pair<int, int> p = vec[i], t = vec[j];
+				if (p.second > t.second)
+					swap(p, t);
+				int pi = p.first, pj = p.second;
+				int ti = t.first, tj = t.second;
+				int ai, aj, bi, bj;
+				while (1)
 				{
-					int minx = min(vec[i].second, vec[j].second);
-					int maxx = max(vec[i].second, vec[j].second);
-					if (2 * minx >= maxx && 2 * minx - maxx < n)
-						M[vec[i].first][2 * minx - maxx] = '#';
-					if (2 * maxx >= minx && 2 * maxx - minx < n)
-						M[vec[i].first][2 * maxx - minx] = '#';
-				}
-				else if (vec[i].second == vec[j].second)
-				{
-					int miny = min(vec[i].second, vec[j].second);
-					int maxy = max(vec[i].second, vec[j].second);
-					if (2 * miny >= maxy && 2 * miny - maxy < m)
-						M[2 * miny - maxy][vec[i].second] = '#';
-					if (2 * maxy >= miny && 2 * maxy - miny < m)
-						M[2 * maxy - miny][vec[i].first] = '#';	
-				}
-				else
-				{
-					pair<int, int> p = vec[i], t = vec[j];
-					if (p.second > t.second)
-						swap(p, t);
-					int ai = 2 * p.first - t.first;
-					int bi = 2 * t.first - p.first;
-					int aj = 2 * p.second - t.second;
-					int bj = 2 * t.second - p.second;
+					ai = 2 * pi - ti;
+					aj = 2 * pj - tj;
 					if (ai >= 0 && ai < m && aj >= 0 && aj < n)
-						M[ai][aj] = '#';
+					{
+						M[ai][aj] = '$';
+						ti = pi, tj = pj;
+						pi = ai, pj = aj;
+					}
+					else
+						break ;
+				}
+				pi = p.first, pj = p.second;
+				ti = t.first, tj = t.second;
+				while (1)
+				{
+					bi = 2 * ti - pi;
+					bj = 2 * tj - pj;
 					if (bi >= 0 && bi < m && bj >= 0 && bj < n)
-						M[bi][bj] = '#';
+					{
+						M[bi][bj] = '$';
+						pi = ti, pj = tj;
+						ti = bi, tj = bj;
+					}
+					else
+						break ;
 				}
 			}
 		}
@@ -56,7 +112,7 @@ void mandatory(vector<string>& M)
 	int ans = 0;
 	for (string& v : M)
 		for (char c : v)
-			if (c == '#')
+			if (c != '.')
 				ans++;
 	cout << ans << endl;
 }
@@ -68,6 +124,6 @@ int main(void)
 	vector<string> M;
 	while (getline(file, line))
 		M.push_back(line);
-	mandatory(M);
+	bonus(M);
 	return (0);
 }
