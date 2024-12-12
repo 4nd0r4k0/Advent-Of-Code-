@@ -6,7 +6,7 @@
 /*   By: andorako <andorako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 08:03:45 by andorako          #+#    #+#             */
-/*   Updated: 2024/12/12 09:12:11 by andorako         ###   ########.fr       */
+/*   Updated: 2024/12/12 09:15:29 by andorako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ long long b_calculate_score(vector<string>& M, vector<vector<bool>>& visited, in
 	}
 	for (auto& p : horizontal)
 	{
-		vector<int> coords = p.second;
+		vector<int>& coords = p.second;
 		sort(begin(coords), end(coords));
 		for (int i = 0, j; i < (int) coords.size();)
 		{
@@ -115,7 +115,7 @@ long long b_calculate_score(vector<string>& M, vector<vector<bool>>& visited, in
 	}
 	for (auto& p : vertical)
 	{
-		vector<int> coords = p.second;
+		vector<int>& coords = p.second;
 		sort(begin(coords), end(coords));
 		for (int i = 0, j; i < (int) coords.size();)
 		{
