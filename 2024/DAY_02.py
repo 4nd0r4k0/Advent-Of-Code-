@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    1.py                                               :+:      :+:    :+:    #
+#    DAY_02.py                                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: andorako <andorako@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/12/02 09:01:23 by andorako          #+#    #+#              #
-#    Updated: 2024/12/02 10:02:09 by andorako         ###   ########.fr        #
+#    Created: 2024/12/02 09:14:46 by andorako          #+#    #+#              #
+#    Updated: 2024/12/12 07:57:12 by andorako         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,26 +15,43 @@ from collections import Counter
 
 input_file = "input.txt"
 
+def in_range(delta):
+	return (delta >= 1 and delta <= 3)
+
+def test(L):
+	sL = sorted(L)
+	check = sL == L
+	check = check or (sL[::-1] == L)
+	if check:
+		for i in range(len(L) - 1):
+			delta = abs(L[i] - L[i + 1])
+			check = check and in_range(delta)
+			if not check:
+				break
+	return check
+
 def mandatory():
 	with open(input_file, "r") as infile:
-		a, b = [], []
+		count = 0
 		for line in infile.readlines():
-			x, y = list(map(int, line.split()))
-			a.append(x)
-			b.append(y)
-		a.sort()
-		b.sort()
-		dist = sum(abs(x - y) for x, y in zip(a, b))
-		print(dist)
+			L = list(map(int, line.split()))
+			if test(L):
+				count += 1
+		print(count)
 
 def bonus():
 	with open(input_file, "r") as infile:
-		a, count = [], Counter()
+		count = 0
 		for line in infile.readlines():
-			x, y = list(map(int, line.split()))
-			a.append(x)
-			count[y] += 1
-		dist = sum(x * count[x] for x in a)
-		print(dist)
+			L = list(map(int, line.split()))
+			if test(L):
+				count += 1
+			else:
+				for i in range(len(L)):
+					Lc = L[:i] + L[i+1:]
+					if test(Lc):
+						count += 1
+						break
+		print(count)
 
 mandatory()

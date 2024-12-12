@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    11.py                                              :+:      :+:    :+:    #
+#    DAY_11.py                                          :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: andorako <andorako@student.42antananari    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/11 08:21:48 by andorako          #+#    #+#              #
-#    Updated: 2024/12/11 08:52:09 by andorako         ###   ########.fr        #
+#    Updated: 2024/12/12 07:56:51 by andorako         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ def mandatory():
 				else:
 					dc = ceil(log10(num + 1))
 					if dc & 1:
-						new_shit.append(num * 2024);
+						new_shit.append(num * 2024)
 					else:
 						pow10 = 10 ** (dc >> 1)
 						new_shit.append(num // pow10)
