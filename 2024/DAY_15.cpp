@@ -33,54 +33,35 @@ void mandatory(vector<string>& mp, string& path)
 {
 	auto p = get_position(mp);
 	int i = p.first, j = p.second;
+	int di, dj;
 	for (char c : path)
 	{
-		if (c == '^')
+		if (c == '^' || c == 'v')
 		{
-			int ii;
-			for (ii = i; mp[ii - 1][j] == 'O'; ii--) ;
-			if (mp[ii - 1][j] != '#')
+			int ii = i;
+			di = (c == '^') ? -1 : 1;
+			while (mp[ii + di][j] == 'O')
+				ii += di;
+			if (mp[ii + di][j] != '#')
 			{
-				swap(mp[ii - 1][j], mp[i - 1][j]);
-				mp[i - 1][j] = '@';
+				swap(mp[ii + di][j], mp[i + di][j]);
+				mp[i + di][j] = '@';
 				mp[i][j] = '.';
-				i--;
+				i += di;
 			}
 		}
-		else if (c == 'v')
+		else if (c == '<' || c == '>')
 		{
-			int ii;
-			for (ii = i; mp[ii + 1][j] == 'O'; ii++) ;
-			if (mp[ii + 1][j] != '#')
+			int jj = j;
+			dj = (c == '<') ? -1 : 1;
+			while (mp[i][jj + dj] == 'O')
+				jj += dj;
+			if (mp[i][jj + dj] != '#')
 			{
-				swap(mp[ii + 1][j], mp[i + 1][j]);
-				mp[i + 1][j] = '@';
+				swap(mp[i][jj + dj], mp[i][j + dj]);
+				mp[i][j + dj] = '@';
 				mp[i][j] = '.';
-				i++;
-			}
-		}
-		else if (c == '<')
-		{
-			int jj;
-			for (jj = j; mp[i][jj - 1] == 'O'; jj--) ;
-			if (mp[i][jj - 1] != '#')
-			{
-				swap(mp[i][jj - 1], mp[i][j - 1]);
-				mp[i][j - 1] = '@';
-				mp[i][j] = '.';
-				j--;
-			}
-		}
-		else if (c == '>')
-		{
-			int jj;
-			for (jj = j; mp[i][jj + 1] == 'O'; jj++) ;
-			if (mp[i][jj + 1] != '#')
-			{
-				swap(mp[i][jj + 1], mp[i][j + 1]);
-				mp[i][j + 1] = '@';
-				mp[i][j] = '.';
-				j++;
+				j += dj;
 			}
 		}
 	}
@@ -95,7 +76,7 @@ void mandatory(vector<string>& mp, string& path)
 	cout << ans << endl;
 }
 
-bool move_vertical(vector<string>& mp, int i, int j, int di)
+int move_vertical(vector<string>& mp, int i, int j, int di)
 {
 	queue<pair<int, int>> que;
 	set<pair<int, int>> marked;
@@ -114,36 +95,35 @@ bool move_vertical(vector<string>& mp, int i, int j, int di)
 	{
 		int Q = que.size();
 		vector<pair<int, int>> l;
-		for (int _ = 0; _ < Q; _++)
+		while (Q-- > 0)
 		{
 			auto p = que.front();
 			que.pop();
 			int ni = p.first, nj = p.second;
 			if (mp[ni + di][nj] == '#')
-				return (false);
+				return (0);
 			l.push_back({ni, nj});
-			if (mp[ni + di][nj] != '.')
+			if (mp[ni + di][nj] == '.')
+				continue ;
+			if (mp[ni + di][nj] == '[')
 			{
-				if (mp[ni + di][nj] == '[')
+				if (marked.find({ni + di, nj}) == marked.end() && marked.find({ni + di, nj + 1}) == marked.end())
 				{
-					if (marked.find({ni + di, nj}) == marked.end() && marked.find({ni + di, nj + 1}) == marked.end())
-					{
-						marked.insert({ni + di, nj});
-						marked.insert({ni + di, nj + 1});
-						que.push({ni + di, nj});
-						que.push({ni + di, nj + 1});
-					}
+					marked.insert({ni + di, nj});
+					marked.insert({ni + di, nj + 1});
+					que.push({ni + di, nj});
+					que.push({ni + di, nj + 1});
 				}
-				else if (mp[ni + di][nj] == ']')
+			}
+			else if (mp[ni + di][nj] == ']')
+			{
+				if (marked.find({ni + di, nj}) == marked.end() && marked.find({ni + di, nj - 1}) == marked.end())
 				{
-					if (marked.find({ni + di, nj}) == marked.end() && marked.find({ni + di, nj - 1}) == marked.end())
-					{
-						marked.insert({ni + di, nj});
-						marked.insert({ni + di, nj - 1});
-						que.push({ni + di, nj});
-						que.push({ni + di, nj - 1});
-					}		
-				}
+					marked.insert({ni + di, nj});
+					marked.insert({ni + di, nj - 1});
+					que.push({ni + di, nj});
+					que.push({ni + di, nj - 1});
+				}		
 			}
 		}
 		if (!l.empty())
@@ -162,7 +142,7 @@ bool move_vertical(vector<string>& mp, int i, int j, int di)
 		}
 	}
 	swap(mp[i + di][j], mp[i][j]);
-	return (true);
+	return (di);
 }
 
 void bonus(vector<string>& mp, string& path)
@@ -183,45 +163,34 @@ void bonus(vector<string>& mp, string& path)
 	swap(rmp, mp);
 	auto p = get_position(mp);
 	int i = p.first, j = p.second;
+	int di, dj;
 	for (char c : path)
 	{
-		if (c == '^')
+		if (c == '^' || c == 'v')
 		{
-			if (mp[i - 1][j] == '.') swap(mp[i - 1][j], mp[i][j]), i--;
-			else if (mp[i - 1][j] != '#') i -= move_vertical(mp, i, j, -1);
-		}
-		else if (c == 'v')
-		{
-			if (mp[i + 1][j] == '.') swap(mp[i + 1][j], mp[i][j]), i++;
-			else if (mp[i + 1][j] != '#') i += move_vertical(mp, i, j, 1);
-		}
-		else if (c == '<')
-		{
-			int jj;
-			for (jj = j - 1; mp[i][jj] != '.' && mp[i][jj] != '#'; jj--) ;
-			if (mp[i][jj] != '#')
+			di = (c == '^') ? -1 : 1;
+			if (mp[i + di][j] == '.')
 			{
-				while (jj + 1 <= j)
-				{
-					swap(mp[i][jj], mp[i][jj + 1]);
-					jj++;
-				}
-				j--;
+				swap(mp[i + di][j], mp[i][j]);
+				i += di;
 			}
+			else if (mp[i + di][j] != '#')
+				i += move_vertical(mp, i, j, di);
 		}
-		else if (c == '>')
+		else if (c == '<' || c == '>')
 		{
-			int jj;
-			for (jj = j + 1; mp[i][jj] != '.' && mp[i][jj] != '#'; jj++) ;
-			if (mp[i][jj] != '#')
+			dj = (c == '<') ? -1 : 1;
+			int jj = j + dj;
+			while (mp[i][jj] != '.' && mp[i][jj] != '#')
+				jj += dj;
+			if (mp[i][jj] == '#')
+				continue ;
+			while (dj < 0 ? jj - dj <= j : jj - dj >= j)
 			{
-				while (jj - 1 >= j)
-				{
-					swap(mp[i][jj], mp[i][jj - 1]);
-					jj--;
-				}
-				j++;
+				swap(mp[i][jj], mp[i][jj - dj]);
+				jj -= dj;
 			}
+			j += dj;
 		}
 	}
 	ll ans = 0;
@@ -254,7 +223,7 @@ int main(void)
 	}
 	while (getline(infile, line))
 		path += line;
-	bonus(M, path);
+	mandatory(M, path);
 	return (0);
 }
 
