@@ -6,7 +6,7 @@
 /*   By: andorako <andorako@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/19 08:18:27 by andorako          #+#    #+#             */
-/*   Updated: 2024/12/19 09:40:09 by andorako         ###   ########.fr       */
+/*   Updated: 2024/12/19 10:03:05 by andorako         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,14 +112,14 @@ void bonus(void)
 	}
 	string line;
 	getline(file, line);
-	long long possible = 0;
+	long long combinations = 0;
 	while (getline(file, line))
 	{
 		const int N = line.size();
 		vector<vector<long long>> dp(N + 1, vector<long long>(N + 1, -1));
-		possible += b_solve(patterns_set, dp, line, 0, 0);
+		combinations += b_solve(patterns_set, dp, line, 0, 0);
 	}
-	cout << possible << endl;
+	cout << combinations << endl;
 }
 
 int main(void)
